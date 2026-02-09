@@ -1,15 +1,5 @@
 import React from 'react';
 
-export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
-interface AvatarProps {
-  src;
-  alt;
-  size?: AvatarSize;
-  className?;
-  status?: 'online' | 'offline' | 'away' | 'busy';
-}
-
 export const Avatar = ({
   src,
   alt,
@@ -26,10 +16,10 @@ export const Avatar = ({
   };
   
   const statusColors = {
-    online: 'bg-success-500',
+    online: 'bg-green-500', 
     offline: 'bg-gray-400',
-    away: 'bg-warning-500',
-    busy: 'bg-error-500',
+    away: 'bg-yellow-500',
+    busy: 'bg-red-500',
   };
   
   const statusSizes = {
@@ -41,18 +31,20 @@ export const Avatar = ({
   };
   
   return (
-    
-       {
-          // Fallback to initials if image fails to load
-          const target = e.target as HTMLImageElement;
-          target.onerror = null;
-          target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(alt)}&background=random`;
+    <div className={`relative inline-block ${className}`}>
+      <img
+        className={`${sizeClasses[size]} rounded-full object-cover border-2 border-white shadow-sm transition-transform hover:scale-110 duration-200`}
+        src={src || `https://ui-avatars.com/api/?name=${encodeURIComponent(alt || 'User')}&background=random`}
+        alt={alt}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(alt || 'User')}&background=random`;
         }}
       />
       
       {status && (
-        
+        <span className={`absolute bottom-0 right-0 block rounded-full ring-2 ring-white ${statusColors[status]} ${statusSizes[size]}`} />
       )}
-    
+    </div>
   );
 };

@@ -1,5 +1,3 @@
-import { Entrepreneur, Investor } from '../types';
-
 export const entrepreneurs = [
   {
     id: 'e1',
@@ -15,7 +13,7 @@ export const entrepreneurs = [
     location: 'San Francisco, CA',
     foundedYear: 2021,
     teamSize: 12,
-    isOnline,
+    isOnline: true,
     createdAt: '2023-01-15T09:24:00Z'
   },
   {
@@ -32,7 +30,7 @@ export const entrepreneurs = [
     location: 'Portland, OR',
     foundedYear: 2020,
     teamSize: 8,
-    isOnline,
+    isOnline: false,
     createdAt: '2022-03-10T14:35:00Z'
   },
   {
@@ -49,7 +47,7 @@ export const entrepreneurs = [
     location: 'Boston, MA',
     foundedYear: 2022,
     teamSize: 5,
-    isOnline,
+    isOnline: true,
     createdAt: '2022-07-22T11:42:00Z'
   },
   {
@@ -66,7 +64,7 @@ export const entrepreneurs = [
     location: 'Chicago, IL',
     foundedYear: 2019,
     teamSize: 14,
-    isOnline,
+    isOnline: false,
     createdAt: '2021-11-05T16:18:00Z'
   }
 ];
@@ -85,7 +83,7 @@ export const investors = [
     totalInvestments: 12,
     minimumInvestment: '$250K',
     maximumInvestment: '$1.5M',
-    isOnline,
+    isOnline: true,
     createdAt: '2020-05-18T10:15:00Z'
   },
   {
@@ -101,7 +99,7 @@ export const investors = [
     totalInvestments: 18,
     minimumInvestment: '$500K',
     maximumInvestment: '$3M',
-    isOnline,
+    isOnline: false,
     createdAt: '2019-08-30T15:40:00Z'
   },
   {
@@ -117,7 +115,7 @@ export const investors = [
     totalInvestments: 9,
     minimumInvestment: '$1M',
     maximumInvestment: '$5M',
-    isOnline,
+    isOnline: true,
     createdAt: '2021-02-12T09:30:00Z'
   }
 ];
@@ -131,7 +129,7 @@ export const findUserById = (id) => {
 };
 
 // Helper function to get a user by role
-export const getUsersByRole = (role: 'entrepreneur' | 'investor') => {
+export const getUsersByRole = (role) => {
   return users.filter(user => user.role === role);
 };
 

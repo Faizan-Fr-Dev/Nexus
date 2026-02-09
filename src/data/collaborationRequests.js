@@ -1,11 +1,9 @@
-import { CollaborationRequest } from '../types';
-
 export const collaborationRequests = [
   {
     id: 'req1',
     investorId: 'i1',
     entrepreneurId: 'e1',
-    message: 'Id like to explore potential investment in TechWave AI. Your AI-driven financial analytics platform aligns well with my investment thesis.',
+    message: 'I\'d like to explore potential investment in TechWave AI. Your AI-driven financial analytics platform aligns well with my investment thesis.',
     status: 'pending',
     createdAt: '2023-08-10T15:30:00Z'
   },
@@ -13,7 +11,7 @@ export const collaborationRequests = [
     id: 'req2',
     investorId: 'i2',
     entrepreneurId: 'e1',
-    message: 'Interested in discussing how TechWave AI can incorporate sustainable practices. Lets connect to explore potential collaboration.',
+    message: 'Interested in discussing how TechWave AI can incorporate sustainable practices. Let\'s connect to explore potential collaboration.',
     status: 'accepted',
     createdAt: '2023-08-05T11:45:00Z'
   },
@@ -21,7 +19,7 @@ export const collaborationRequests = [
     id: 'req3',
     investorId: 'i3',
     entrepreneurId: 'e3',
-    message: 'Your HealthPulse platform addresses a critical need in mental healthcare. Id like to learn more about your traction and roadmap.',
+    message: 'Your HealthPulse platform addresses a critical need in mental healthcare. I\'d like to learn more about your traction and roadmap.',
     status: 'pending',
     createdAt: '2023-08-12T09:20:00Z'
   },
@@ -29,7 +27,7 @@ export const collaborationRequests = [
     id: 'req4',
     investorId: 'i2',
     entrepreneurId: 'e2',
-    message: 'GreenLifes biodegradable packaging solutions align with my focus on sustainable investments. Lets discuss scaling possibilities.',
+    message: 'GreenLife\'s biodegradable packaging solutions align with my focus on sustainable investments. Let\'s discuss scaling possibilities.',
     status: 'accepted',
     createdAt: '2023-07-28T14:15:00Z'
   },
@@ -37,7 +35,7 @@ export const collaborationRequests = [
     id: 'req5',
     investorId: 'i1',
     entrepreneurId: 'e4',
-    message: 'Your UrbanFarm concept is fascinating. Im interested in learning more about your IoT implementation and market validation.',
+    message: 'Your UrbanFarm concept is fascinating. I\'m interested in learning more about your IoT implementation and market validation.',
     status: 'rejected',
     createdAt: '2023-08-03T16:50:00Z'
   }
@@ -58,34 +56,29 @@ export const getRequestsFromInvestor = (investorId) => {
 };
 
 // Helper function to update a collaboration request status
-export const updateRequestStatus = (requestId, newStatus: 'pending' | 'accepted' | 'rejected') | null => {
+export const updateRequestStatus = (requestId, newStatus) => {
   const requestIndex = collaborationRequests.findIndex(req => req.id === requestId);
   if (requestIndex === -1) return null;
-  
+
   collaborationRequests[requestIndex] = {
     ...collaborationRequests[requestIndex],
-    status
+    status: newStatus
   };
-  
+
   return collaborationRequests[requestIndex];
 };
 
 // Helper function to create a new collaboration request
-export const createCollaborationRequest = (
-  investorId,
-  entrepreneurId,
-  message
-) => {
+export const createCollaborationRequest = (investorId, entrepreneurId, message) => {
   const newRequest = {
     id: `req${collaborationRequests.length + 1}`,
     investorId,
     entrepreneurId,
     message,
     status: 'pending',
-    createdAt Date().toISOString()
+    createdAt: new Date().toISOString()
   };
-  
+
   collaborationRequests.push(newRequest);
   return newRequest;
 };
-

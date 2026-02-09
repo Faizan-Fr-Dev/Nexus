@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { users } from '../data/users';
-import toast from 'react-hot-toast';
 
 // Create Auth Context
 const AuthContext = createContext(undefined);
@@ -27,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  // Mock login function - in a real app, this would make an API call
+  // Mock login function
   const login = async (email, password, role) => {
     setIsLoading(true);
     
@@ -41,32 +40,25 @@ export const AuthProvider = ({ children }) => {
       if (foundUser) {
         setUser(foundUser);
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(foundUser));
-        toast.success('Successfully logged in!');
+        return { success: true };
       } else {
         throw new Error('Invalid credentials or user not found');
       }
     } catch (error) {
-      toast.error(error.message);
+      console.error('Login error:', error);
       throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Mock register function - in a real app, this would make an API call
+  // Mock register function
   const register = async (name, email, password, role) => {
     setIsLoading(true);
     
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Check if email already exists
-      if (users.some(u => u.email === email)) {
-        throw new Error('Email already in use');
-      }
-      
-      // Create new user
       const newUser = {
         id: `${role[0]}${users.length + 1}`,
         name,
@@ -78,14 +70,11 @@ export const AuthProvider = ({ children }) => {
         createdAt: new Date().toISOString()
       };
       
-      // Add user to mock data
-      users.push(newUser);
-      
       setUser(newUser);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUser));
-      toast.success('Account created successfully!');
+      return { success: true };
     } catch (error) {
-      toast.error(error.message);
+      console.error('Registration error:', error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -94,82 +83,35 @@ export const AuthProvider = ({ children }) => {
 
   // Mock forgot password function
   const forgotPassword = async (email) => {
-    try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Check if user exists
-      const user = users.find(u => u.email === email);
-      if (!user) {
-        throw new Error('No account found with this email');
-      }
-      
-      // Generate reset token (in a real app, this would be a secure token)
-      const resetToken = Math.random().toString(36).substring(2, 15);
-      localStorage.setItem(RESET_TOKEN_KEY, resetToken);
-      
-      // In a real app, this would send an email
-      toast.success('Password reset instructions sent to your email');
-    } catch (error) {
-      toast.error(error.message);
-      throw error;
+    await new Promise(resolve => setTimeout(resolve, 800));
+    const user = users.find(u => u.email === email);
+    if (!user) {
+      throw new Error('No account found with this email');
     }
+    return { success: true };
   };
 
   // Mock reset password function
   const resetPassword = async (token, newPassword) => {
-    try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Verify token
-      const storedToken = localStorage.getItem(RESET_TOKEN_KEY);
-      if (token !== storedToken) {
-        throw new Error('Invalid or expired reset token');
-      }
-      
-      // In a real app, this would update the user's password in the database
-      localStorage.removeItem(RESET_TOKEN_KEY);
-      toast.success('Password reset successfully');
-    } catch (error) {
-      toast.error(error.message);
-      throw error;
-    }
+    await new Promise(resolve => setTimeout(resolve, 800));
+    return { success: true };
   };
 
   // Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem(USER_STORAGE_KEY);
-    toast.success('Logged out successfully');
   };
 
   // Update user profile
   const updateProfile = async (userId, updates) => {
-    try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update user in mock data
-      const userIndex = users.findIndex(u => u.id === userId);
-      if (userIndex === -1) {
-        throw new Error('User not found');
-      }
-      
-      const updatedUser = { ...users[userIndex], ...updates };
-      users[userIndex] = updatedUser;
-      
-      // Update current user if it's the same user
-      if (user?.id === userId) {
-        setUser(updatedUser);
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
-      }
-      
-      toast.success('Profile updated successfully');
-    } catch (error) {
-      toast.error(error.message);
-      throw error;
+    await new Promise(resolve => setTimeout(resolve, 800));
+    if (user?.id === userId) {
+      const updatedUser = { ...user, ...updates };
+      setUser(updatedUser);
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
     }
+    return { success: true };
   };
 
   const value = {
@@ -184,7 +126,11 @@ export const AuthProvider = ({ children }) => {
     isLoading
   };
 
-  return {children};
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 // Custom hook for using auth context
