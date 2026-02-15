@@ -16,31 +16,31 @@ export const EntrepreneurDashboard = () => {
   const [collaborationRequests, setCollaborationRequests] = useState([]);
   const [recommendedInvestors, setRecommendedInvestors] = useState(investors.slice(0, 3));
   const [upcomingMeetings, setUpcomingMeetings] = useState([]);
-  
+
   useEffect(() => {
     if (user) {
       // Load collaboration requests
       const requests = getRequestsForEntrepreneur(user.id);
       setCollaborationRequests(requests);
-      
+
       // Load upcoming meetings
       const meetings = getUpcomingMeetings(user.id);
       setUpcomingMeetings(meetings);
     }
   }, [user]);
-  
+
   const handleRequestStatusUpdate = (requestId, status) => {
-    setCollaborationRequests(prevRequests => 
-      prevRequests.map(req => 
+    setCollaborationRequests(prevRequests =>
+      prevRequests.map(req =>
         req.id === requestId ? { ...req, status } : req
       )
     );
   };
-  
+
   if (!user) return null;
-  
+
   const pendingRequests = collaborationRequests.filter(req => req.status === 'pending');
-  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -48,8 +48,8 @@ export const EntrepreneurDashboard = () => {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">Welcome, {user.name}</h1>
           <p className="text-sm md:text-base text-gray-500 font-medium">Here's what's happening with your startup today</p>
         </div>
-        
-        <Link 
+
+        <Link
           to="/investors"
           className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-primary-200 transition-all hover:-translate-y-0.5"
         >
@@ -57,7 +57,7 @@ export const EntrepreneurDashboard = () => {
           Find Investors
         </Link>
       </div>
-      
+
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-l-4 border-l-yellow-500 bg-white/50 backdrop-blur-sm">
@@ -73,7 +73,7 @@ export const EntrepreneurDashboard = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card className="border-l-4 border-l-green-500 bg-white/50 backdrop-blur-sm">
           <CardBody className="p-5">
             <div className="flex justify-between items-start">
@@ -89,7 +89,7 @@ export const EntrepreneurDashboard = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card className="border-l-4 border-l-blue-500 bg-white/50 backdrop-blur-sm">
           <CardBody className="p-5">
             <div className="flex justify-between items-start">
@@ -105,13 +105,13 @@ export const EntrepreneurDashboard = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card className="border-l-4 border-l-purple-500 bg-white/50 backdrop-blur-sm">
           <CardBody className="p-5">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Profile Views</p>
-                <h3 className="text-3xl font-black text-gray-900 mt-2">24</h3>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Wallet Balance</p>
+                <h3 className="text-3xl font-black text-gray-900 mt-2">$25,430</h3>
               </div>
               <div className="p-3 bg-purple-50 rounded-xl">
                 <TrendingUp size={24} className="text-purple-600" />
@@ -120,7 +120,7 @@ export const EntrepreneurDashboard = () => {
           </CardBody>
         </Card>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Collaboration requests */}
         <div className="lg:col-span-2 space-y-6">
@@ -129,12 +129,12 @@ export const EntrepreneurDashboard = () => {
               <h2 className="text-xl font-bold text-gray-900">Collaboration Requests</h2>
               <Badge variant="warning">{pendingRequests.length} pending</Badge>
             </div>
-            
+
             {collaborationRequests.length > 0 ? (
               <div className="space-y-4">
                 {collaborationRequests.map(request => (
-                  <CollaborationRequestCard 
-                    key={request.id} 
+                  <CollaborationRequestCard
+                    key={request.id}
                     request={request}
                     onStatusUpdate={handleRequestStatusUpdate}
                   />
@@ -199,7 +199,7 @@ export const EntrepreneurDashboard = () => {
             )}
           </div>
         </div>
-        
+
         {/* Recommended investors */}
         <div className="lg:col-span-1 space-y-4">
           <div className="flex items-center justify-between px-1">
@@ -208,7 +208,7 @@ export const EntrepreneurDashboard = () => {
               View all
             </Link>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
             {recommendedInvestors.map(investor => (
               <InvestorCard key={investor.id} investor={investor} compact />

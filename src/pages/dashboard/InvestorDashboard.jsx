@@ -16,7 +16,7 @@ export const InvestorDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndustries, setSelectedIndustries] = useState([]);
   const [upcomingMeetings, setUpcomingMeetings] = useState([]);
-  
+
   useEffect(() => {
     if (user) {
       // Load upcoming meetings
@@ -24,41 +24,41 @@ export const InvestorDashboard = () => {
       setUpcomingMeetings(meetings);
     }
   }, [user]);
-  
+
   if (!user) return null;
-  
+
   // Get collaboration requests sent by this investor
   const sentRequests = getRequestsFromInvestor(user.id);
   const requestedEntrepreneurIds = sentRequests.map(req => req.entrepreneurId);
-  
+
   // Filter entrepreneurs based on search and industry filters
   const filteredEntrepreneurs = entrepreneurs.filter(entrepreneur => {
     // Search filter
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch = searchQuery === '' ||
       entrepreneur.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entrepreneur.startupName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entrepreneur.industry.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entrepreneur.pitchSummary.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     // Industry filter
-    const matchesIndustry = selectedIndustries.length === 0 || 
+    const matchesIndustry = selectedIndustries.length === 0 ||
       selectedIndustries.includes(entrepreneur.industry);
-    
+
     return matchesSearch && matchesIndustry;
   });
-  
+
   // Get unique industries for filter
   const industries = Array.from(new Set(entrepreneurs.map(e => e.industry)));
-  
+
   // Toggle industry selection
   const toggleIndustry = (industry) => {
-    setSelectedIndustries(prevSelected => 
+    setSelectedIndustries(prevSelected =>
       prevSelected.includes(industry)
         ? prevSelected.filter(i => i !== industry)
         : [...prevSelected, industry]
     );
   };
-  
+
   return (
     <div className="space-y-6 md:space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -66,8 +66,8 @@ export const InvestorDashboard = () => {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">Discover Startups</h1>
           <p className="text-sm md:text-base text-gray-500 font-medium tracking-tight">Find and connect with promising entrepreneurs</p>
         </div>
-        
-        <Link 
+
+        <Link
           to="/entrepreneurs"
           className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-primary-200 transition-all hover:-translate-y-0.5"
         >
@@ -75,36 +75,35 @@ export const InvestorDashboard = () => {
           View All Startups
         </Link>
       </div>
-      
+
       {/* Filters and search */}
       <div className="flex flex-col lg:flex-row gap-4 lg:items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
         <div className="w-full lg:w-[400px]">
-          <Input 
-            placeholder="Search by name, startup or industry..." 
+          <Input
+            placeholder="Search by name, startup or industry..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             fullWidth
             startAdornment={<Search size={18} className="text-gray-400 group-focus-within:text-primary-500 transition-colors" />}
           />
         </div>
-        
+
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
           <div className="flex items-center gap-2 text-gray-500 min-w-max">
             <Filter size={18} className="text-primary-500" />
             <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Industry:</span>
           </div>
-          
+
           <div className="flex-1 overflow-x-auto no-scrollbar pb-1">
             <div className="flex items-center gap-2">
               {industries.map(industry => (
                 <button
                   key={industry}
                   onClick={() => toggleIndustry(industry)}
-                  className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all whitespace-nowrap ${
-                    selectedIndustries.includes(industry)
+                  className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all whitespace-nowrap ${selectedIndustries.includes(industry)
                       ? 'bg-primary-600 border-primary-600 text-white shadow-md shadow-primary-100'
                       : 'bg-gray-50 border-gray-100 text-gray-600 hover:bg-gray-100 hover:border-gray-200'
-                  }`}
+                    }`}
                 >
                   {industry}
                 </button>
@@ -113,7 +112,7 @@ export const InvestorDashboard = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Stats summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-l-4 border-l-yellow-500 bg-white/50 backdrop-blur-sm">
@@ -129,13 +128,13 @@ export const InvestorDashboard = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card className="border-l-4 border-l-green-500 bg-white/50 backdrop-blur-sm">
           <CardBody className="p-5">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Industries</p>
-                <h3 className="text-3xl font-black text-gray-900 mt-2">{industries.length}</h3>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Wallet Balance</p>
+                <h3 className="text-3xl font-black text-gray-900 mt-2">$2,500,000</h3>
               </div>
               <div className="p-3 bg-green-50 rounded-xl">
                 <PieChart size={24} className="text-green-600" />
@@ -143,7 +142,7 @@ export const InvestorDashboard = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card className="border-l-4 border-l-blue-500 bg-white/50 backdrop-blur-sm">
           <CardBody className="p-5">
             <div className="flex justify-between items-start">
@@ -176,7 +175,7 @@ export const InvestorDashboard = () => {
           </CardBody>
         </Card>
       </div>
-      
+
       {/* Entrepreneurs grid and Meetings */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
@@ -186,7 +185,7 @@ export const InvestorDashboard = () => {
               <span className="text-sm font-medium text-gray-400">({filteredEntrepreneurs.length})</span>
             </h2>
             {filteredEntrepreneurs.length < entrepreneurs.length && (
-              <button 
+              <button
                 onClick={() => { setSearchQuery(''); setSelectedIndustries([]); }}
                 className="text-[10px] font-bold text-primary-600 uppercase tracking-widest hover:underline"
               >
@@ -194,13 +193,13 @@ export const InvestorDashboard = () => {
               </button>
             )}
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {filteredEntrepreneurs.length > 0 ? (
               <>
                 {filteredEntrepreneurs.map(entrepreneur => (
-                  <EntrepreneurCard 
-                    key={entrepreneur.id} 
+                  <EntrepreneurCard
+                    key={entrepreneur.id}
                     entrepreneur={entrepreneur}
                     hasRequested={requestedEntrepreneurIds.includes(entrepreneur.id)}
                   />
@@ -213,8 +212,8 @@ export const InvestorDashboard = () => {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">No matches found</h3>
                 <p className="text-sm text-gray-500 mt-2 max-w-xs mx-auto italic">Try adjusting your filters or search terms to find what you're looking for.</p>
-                <Button 
-                  variant="primary" 
+                <Button
+                  variant="primary"
                   size="sm"
                   className="mt-6 font-bold"
                   onClick={() => {

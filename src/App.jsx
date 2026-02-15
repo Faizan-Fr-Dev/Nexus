@@ -24,6 +24,7 @@ import { MessagesPage } from './pages/messages/MessagesPage';
 import { NotificationsPage } from './pages/notifications/NotificationsPage';
 import { DocumentsPage } from './pages/documents/DocumentsPage';
 import { VideoCall } from './pages/VideoCall';
+import { WalletPage } from './pages/financials/WalletPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { HelpPage } from './pages/help/HelpPage';
 import { DealsPage } from './pages/deals/DealsPage';
@@ -80,6 +81,10 @@ function App() {
 
           <Route path="/video-call" element={<DashboardLayout />}>
             <Route index element={<VideoCall />} />
+          </Route>
+
+          <Route path="/wallet" element={<DashboardLayout />}>
+            <Route index element={<WalletPage />} />
           </Route>
 
           <Route path="/settings" element={<DashboardLayout />}>

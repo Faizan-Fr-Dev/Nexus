@@ -11,25 +11,36 @@ export const LoginPage = () => {
   const [role, setRole] = useState('entrepreneur');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [otp, setOtp] = useState('');
+
   const { login } = useAuth();
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-    
+
     try {
       await login(email, password, role);
-      // Redirect based on user role
-      navigate(role === 'entrepreneur' ? '/dashboard/entrepreneur' : '/dashboard/investor');
+      setIsLoading(false);
+      setShowTwoFactor(true);
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
     }
   };
-  
+
+  const handleVerifyOtp = (e) => {
+    e.preventDefault();
+    if (otp.length === 6) {
+      navigate(role === 'entrepreneur' ? '/dashboard/entrepreneur' : '/dashboard/investor');
+    } else {
+      setError("Invalid OTP. Please enter 6 digits (e.g. 123456)");
+    }
+  };
+
   // For demo purposes, pre-filled credentials
   const fillDemoCredentials = (userRole) => {
     if (userRole === 'entrepreneur') {
@@ -41,7 +52,7 @@ export const LoginPage = () => {
     }
     setRole(userRole);
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -66,78 +77,102 @@ export const LoginPage = () => {
               {error}
             </div>
           )}
-          
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                I am a
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  className={`flex items-center justify-center p-3 border-2 rounded-xl transition-all ${
-                    role === 'entrepreneur' 
-                      ? 'border-primary-500 bg-primary-50 text-primary-700' 
-                      : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                  }`}
-                  onClick={() => setRole('entrepreneur')}
-                >
-                  <Building2 size={18} className="mr-2" />
-                  <span className="font-semibold text-sm">Entrepreneur</span>
-                </button>
-                <button
-                  type="button"
-                  className={`flex items-center justify-center p-3 border-2 rounded-xl transition-all ${
-                    role === 'investor' 
-                      ? 'border-primary-500 bg-primary-50 text-primary-700' 
-                      : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                  }`}
-                  onClick={() => setRole('investor')}
-                >
-                  <CircleDollarSign size={18} className="mr-2" />
-                  <span className="font-semibold text-sm">Investor</span>
-                </button>
-              </div>
-            </div>
 
-            <Input
-              label="Email address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              fullWidth
-              startAdornment={<User size={18} className="text-gray-400" />}
-            />
+          <form className="space-y-6" onSubmit={showTwoFactor ? handleVerifyOtp : handleSubmit}>
+            {!showTwoFactor ? (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    I am a
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      type="button"
+                      className={`flex items-center justify-center p-3 border-2 rounded-xl transition-all ${role === 'entrepreneur'
+                          ? 'border-primary-500 bg-primary-50 text-primary-700'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                        }`}
+                      onClick={() => setRole('entrepreneur')}
+                    >
+                      <Building2 size={18} className="mr-2" />
+                      <span className="font-semibold text-sm">Entrepreneur</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`flex items-center justify-center p-3 border-2 rounded-xl transition-all ${role === 'investor'
+                          ? 'border-primary-500 bg-primary-50 text-primary-700'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                        }`}
+                      onClick={() => setRole('investor')}
+                    >
+                      <CircleDollarSign size={18} className="mr-2" />
+                      <span className="font-semibold text-sm">Investor</span>
+                    </button>
+                  </div>
+                </div>
 
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              fullWidth
-            />
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                <Input
+                  label="Email address"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  fullWidth
+                  startAdornment={<User size={18} className="text-gray-400" />}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
 
-              <div className="text-sm">
-                <Link to="/forgot-password" weight="medium" className="text-primary-600 hover:text-primary-500">
-                  Forgot your password?
-                </Link>
+                <Input
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  fullWidth
+                />
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <input
+                      id="remember-me"
+                      name="remember-me"
+                      type="checkbox"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                      Remember me
+                    </label>
+                  </div>
+
+                  <div className="text-sm">
+                    <Link to="/forgot-password" weight="medium" className="text-primary-600 hover:text-primary-500">
+                      Forgot your password?
+                    </Link>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="space-y-4 animate-in fade-in zoom-in duration-300">
+                <div className="bg-blue-50 p-4 rounded-lg flex items-start gap-3">
+                  <AlertCircle className="text-blue-600 shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <h4 className="text-sm font-bold text-blue-900">Two-Factor Authentication</h4>
+                    <p className="text-xs text-blue-700 mt-1">For security, please enter the 6-digit code sent to your mobile device.</p>
+                    <p className="text-xs font-mono bg-white inline-block px-2 py-1 rounded mt-2 border border-blue-200 text-blue-800">Mock Code: 123456</p>
+                  </div>
+                </div>
+                <Input
+                  label="One-Time Password (OTP)"
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
+                  fullWidth
+                  placeholder="123456"
+                  className="text-center text-2xl tracking-widest font-mono"
+                  maxLength={6}
+                />
               </div>
-            </div>
+            )}
 
             <div>
               <Button
@@ -148,7 +183,7 @@ export const LoginPage = () => {
                 size="lg"
                 leftIcon={<LogIn size={18} />}
               >
-                Sign in
+                {showTwoFactor ? 'Verify & Login' : 'Sign in'}
               </Button>
             </div>
           </form>

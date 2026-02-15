@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   Home, Building2, CircleDollarSign, Users, MessageCircle,
-  Bell, FileText, Settings, HelpCircle, Calendar, X, Video
+  Bell, FileText, Settings, HelpCircle, Calendar, X, Video, Wallet
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 
@@ -40,6 +40,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
     { to: '/notifications', icon: <Bell size={20} />, text: 'Notifications' },
     { to: '/documents', icon: <FileText size={20} />, text: 'Documents' },
     { to: '/video-call', icon: <Video size={20} />, text: 'Video Call' },
+    { to: '/wallet', icon: <Wallet size={20} />, text: 'Wallet' },
   ];
 
   const investorItems = [
@@ -49,8 +50,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
     { to: '/messages', icon: <MessageCircle size={20} />, text: 'Messages' },
     { to: '/schedule', icon: <Calendar size={20} />, text: 'Schedule' },
     { to: '/notifications', icon: <Bell size={20} />, text: 'Notifications' },
+    { to: '/documents', icon: <FileText size={20} />, text: 'Documents' },
     { to: '/deals', icon: <FileText size={20} />, text: 'Deals' },
     { to: '/video-call', icon: <Video size={20} />, text: 'Video Call' },
+    { to: '/wallet', icon: <Wallet size={20} />, text: 'Wallet' },
   ];
 
   const sidebarItems = user.role === 'entrepreneur' ? entrepreneurItems : investorItems;

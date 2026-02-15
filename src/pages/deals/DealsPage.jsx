@@ -5,6 +5,7 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
+import { useAuth } from '../../context/AuthContext';
 
 const deals = [
   {
@@ -49,19 +50,22 @@ const deals = [
 ];
 
 export const DealsPage = () => {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState([]);
-  
+  const [selectedDeal, setSelectedDeal] = useState(null);
+  const [showFundModal, setShowFundModal] = useState(false);
+
   const statuses = ['Due Diligence', 'Term Sheet', 'Negotiation', 'Closed', 'Passed'];
-  
+
   const toggleStatus = (status) => {
-    setSelectedStatus(prev => 
+    setSelectedStatus(prev =>
       prev.includes(status)
         ? prev.filter(s => s !== status)
         : [...prev, status]
     );
   };
-  
+
   const getStatusVariant = (status) => {
     switch (status) {
       case 'Due Diligence': return 'primary';
@@ -72,7 +76,7 @@ export const DealsPage = () => {
       default: return 'outline';
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -82,7 +86,7 @@ export const DealsPage = () => {
         </div>
         <Button variant="primary">Add Deal</Button>
       </div>
-      
+
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
@@ -96,7 +100,7 @@ export const DealsPage = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card>
           <CardBody className="flex items-center gap-4">
             <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
@@ -108,7 +112,7 @@ export const DealsPage = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card>
           <CardBody className="flex items-center gap-4">
             <div className="p-3 bg-green-100 rounded-lg text-green-600">
@@ -120,7 +124,7 @@ export const DealsPage = () => {
             </div>
           </CardBody>
         </Card>
-        
+
         <Card>
           <CardBody className="flex items-center gap-4">
             <div className="p-3 bg-purple-100 rounded-lg text-purple-600">
@@ -133,19 +137,19 @@ export const DealsPage = () => {
           </CardBody>
         </Card>
       </div>
-      
+
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-4 items-center">
         <div className="w-full md:w-96">
-          <Input 
-            placeholder="Search deals..." 
+          <Input
+            placeholder="Search deals..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             startAdornment={<Search size={18} className="text-gray-400" />}
             fullWidth
           />
         </div>
-        
+
         <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
           <Filter size={18} className="text-gray-500" />
           <div className="flex gap-2">
@@ -153,11 +157,10 @@ export const DealsPage = () => {
               <button
                 key={status}
                 onClick={() => toggleStatus(status)}
-                className={`px-3 py-1 text-xs rounded-full border transition-colors whitespace-nowrap ${
-                  selectedStatus.includes(status)
+                className={`px-3 py-1 text-xs rounded-full border transition-colors whitespace-nowrap ${selectedStatus.includes(status)
                     ? 'bg-primary-50 border-primary-500 text-primary-700'
                     : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 {status}
               </button>
@@ -165,7 +168,7 @@ export const DealsPage = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Deals table */}
       <Card>
         <CardHeader border={false}>
@@ -199,8 +202,17 @@ export const DealsPage = () => {
                   <td className="px-6 py-4">
                     <Badge variant={getStatusVariant(deal.status)}>{deal.status}</Badge>
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-6 py-4 text-center flex gap-2 justify-center">
                     <Button variant="ghost" size="sm">View Details</Button>
+                    {user?.role === 'investor' && (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => { setSelectedDeal(deal); setShowFundModal(true); }}
+                      >
+                        Fund
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -208,6 +220,40 @@ export const DealsPage = () => {
           </table>
         </div>
       </Card>
+
+      {/* Fund Modal */}
+      {showFundModal && selectedDeal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-xl font-bold mb-2">Fund {selectedDeal.startup.name}</h3>
+            <p className="text-gray-500 mb-6">You are about to fund this deal.</p>
+
+            <div className="bg-gray-50 p-4 rounded-lg mb-6 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Amount:</span>
+                <span className="font-bold">{selectedDeal.amount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Equity:</span>
+                <span className="font-bold">{selectedDeal.equity}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <Button variant="ghost" onClick={() => setShowFundModal(false)}>Cancel</Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  alert(`Successfully funded ${selectedDeal.startup.name} for ${selectedDeal.amount}!`);
+                  setShowFundModal(false);
+                }}
+              >
+                Confirm Funding
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
