@@ -3,7 +3,6 @@
 [![Vite](https://img.shields.io/badge/Vite-5.x-646CFF.svg?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB.svg?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC.svg?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 
 **Business Nexus** is a modern, high-fidelity platform designed to bridge the gap between startup founders (Entrepreneurs) and venture capital partners (Investors). Built as a single-page application (SPA) with a premium aesthetic, it enables seamless profile creation, smart matches, collaborative workflows, chat communications, scheduling, video conferencing, document vaults, and deals pipeline management.
 
@@ -100,9 +99,3 @@ Ensure you have [Node.js](https://nodejs.org/) (v16.x or newer) and `npm` instal
     npm run build
     ```
     This produces a ready-to-deploy static website in the `dist/` directory.
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
